@@ -3,28 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Nagpur — Full Dealer Network</title>
+<title>Nagpur — Full Dealer Network Map</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:Arial,sans-serif;display:flex;flex-direction:column;height:100vh;background:#f0f2f5;}
 
-  /* ── HEADER ── */
   #header{background:#0D1B2A;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.4);}
-  #header h1{font-size:17px;font-weight:700;}
-  #header .meta{font-size:11px;color:#90CAF9;margin-top:2px;}
 
-  /* ── TOGGLE BAR ── */
-  #toggleBar{background:#1A2744;padding:8px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
-  #toggleBar .tbl{font-size:12px;color:#CFD8DC;font-weight:600;}
-  .toggle-wrap{display:flex;align-items:center;gap:8px;background:#0D1B2A;border-radius:24px;padding:3px;}
-  .t-btn{padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;color:#90A4AE;background:transparent;}
-  .t-btn.active{background:#1565C0;color:#fff;box-shadow:0 2px 6px rgba(21,101,192,.5);}
-  #shapeLegend{margin-left:auto;display:flex;gap:14px;align-items:center;}
-  .sl-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#B0BEC5;}
-  .sl-circle{width:11px;height:11px;border-radius:50%;background:#90A4AE;}
-  .sl-diamond{width:10px;height:10px;background:#90A4AE;transform:rotate(45deg);}
-
-  /* ── FILTER BAR ── */
   #filterBar{background:#fff;padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-bottom:1px solid #ddd;flex-shrink:0;}
   #filterBar .lbl{font-size:11px;font-weight:700;color:#555;margin-right:2px;}
   .chip{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:opacity .2s,transform .1s;user-select:none;}
@@ -33,263 +18,339 @@
   .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
   #countBadge{margin-left:auto;background:#E3F2FD;color:#1565C0;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;}
 
-  /* ── MAP ── */
+  #toggleBar{background:#F8F9FA;padding:7px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #ddd;flex-shrink:0;}
+  #toggleBar .tlbl{font-size:12px;font-weight:700;color:#333;}
+  .toggle-wrap{display:flex;align-items:center;gap:8px;font-size:12px;}
+  .toggle-switch{position:relative;width:44px;height:22px;cursor:pointer;}
+  .toggle-switch input{opacity:0;width:0;height:0;}
+  .toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:22px;transition:.3s;}
+  .toggle-slider:before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+  input:checked + .toggle-slider{background:#1565C0;}
+  input:checked + .toggle-slider:before{transform:translateX(22px);}
+  .toggle-note{font-size:11px;color:#888;}
+
+  #legendBar{background:#fff;padding:5px 16px;display:flex;align-items:center;gap:18px;border-bottom:1px solid #eee;flex-shrink:0;font-size:11px;color:#555;}
+  .leg-item{display:flex;align-items:center;gap:5px;}
+  .leg-circle{width:12px;height:12px;border-radius:50%;background:#555;flex-shrink:0;}
+  .leg-diamond{width:11px;height:11px;background:#555;transform:rotate(45deg);flex-shrink:0;}
+
   #gmap{flex:1;width:100%;}
 
-  .iw-wrap{font-family:Arial,sans-serif;min-width:195px;padding:2px 0;}
-  .iw-name{font-size:14px;font-weight:700;color:#212121;margin-bottom:5px;}
-  .iw-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;margin-bottom:7px;}
-  .iw-type{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:5px;}
-  .iw-row{font-size:12px;color:#555;margin:2px 0;display:flex;gap:5px;align-items:flex-start;}
-  .iw-row span{color:#888;}
-  .iw-parent{font-size:11px;color:#888;margin:3px 0 0 0;font-style:italic;}
-  .iw-sales{background:#F5F5F5;border-radius:6px;padding:6px 8px;margin-top:6px;display:flex;gap:10px;font-size:11px;}
-  .iw-sales div{text-align:center;}
-  .iw-sales .sv{font-weight:700;font-size:13px;color:#212121;}
-  .iw-sales .sk{color:#888;font-size:10px;}
+  .iw-wrap{font-family:Arial,sans-serif;min-width:210px;padding:2px 0;}
+  .iw-logo{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .iw-name{font-size:14px;font-weight:700;color:#212121;margin-bottom:4px;line-height:1.3;}
+  .iw-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;margin-bottom:6px;}
+  .iw-type{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;background:#EEE;color:#555;margin-left:5px;}
+  .iw-row{font-size:12px;color:#555;margin:3px 0;display:flex;gap:6px;align-items:flex-start;}
+  .iw-row span{color:#888;min-width:70px;flex-shrink:0;}
+  .iw-closed{display:inline-block;background:#FF5252;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle;}
 </style>
 </head>
 <body>
 
 <div id="header">
   <div>
-    <div>🗺️ Nagpur Automobile — Full Dealer Network</div>
-    <div class="meta" id="metaLine">33 Main Dealers &nbsp;+&nbsp; 31 Auth Counters &nbsp;·&nbsp; 64 Total Pins &nbsp;·&nbsp; 7 OEM Brands</div>
+    <div style="font-size:17px;font-weight:700;">🗺️ Nagpur Automobile — Full Dealer Network</div>
+    <div style="font-size:11px;color:#90CAF9;margin-top:2px;" id="metaLine">33 Main Dealers &nbsp;+&nbsp; 31 Auth Counters &nbsp;·&nbsp; 64 Total Pins &nbsp;·&nbsp; 7 OEM Brands</div>
   </div>
 </div>
 
-<!-- TOGGLE -->
 <div id="toggleBar">
-  <span class="tbl">View:</span>
+  <span class="tlbl">View:</span>
   <div class="toggle-wrap">
-    <button class="t-btn" id="btnMain" onclick="setView('main')">Main Dealers Only</button>
-    <button class="t-btn active" id="btnAll"  onclick="setView('all')">Main + Auth Counters</button>
+    <span id="lbl-off" style="font-weight:600;color:#1565C0;">Main Dealers Only</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="viewToggle" onchange="onToggle(this)">
+      <span class="toggle-slider"></span>
+    </label>
+    <span id="lbl-on" style="color:#888;">Main + Auth Counters</span>
   </div>
-  <div id="shapeLegend">
-    <div class="sl-item"><div class="sl-circle"></div> Main Dealer</div>
-    <div class="sl-item"><div class="sl-diamond"></div> Sub Dealer / Branch</div>
-  </div>
+  <span class="toggle-note" id="toggleNote">&nbsp;— Showing 33 Main Dealers</span>
 </div>
 
-<!-- OEM FILTER -->
 <div id="filterBar">
   <span class="lbl">Filter by OEM:</span>
-  <div class="chip" data-oem="HMSI"   style="background:#E3F2FD;color:#1565C0;border-color:#1565C0" onclick="tog(this)"><span class="dot" style="background:#1565C0"></span>HMSI (Honda)</div>
-  <div class="chip" data-oem="HERO"   style="background:#FFEBEE;color:#C62828;border-color:#C62828" onclick="tog(this)"><span class="dot" style="background:#C62828"></span>HERO</div>
-  <div class="chip" data-oem="BAJAJ"  style="background:#FFF3E0;color:#E65100;border-color:#E65100" onclick="tog(this)"><span class="dot" style="background:#E65100"></span>BAJAJ</div>
-  <div class="chip" data-oem="TVS"    style="background:#E8F5E9;color:#2E7D32;border-color:#2E7D32" onclick="tog(this)"><span class="dot" style="background:#2E7D32"></span>TVS</div>
-  <div class="chip" data-oem="SUZUKI" style="background:#F3E5F5;color:#6A1B9A;border-color:#6A1B9A" onclick="tog(this)"><span class="dot" style="background:#6A1B9A"></span>SUZUKI</div>
-  <div class="chip" data-oem="RE"     style="background:#EFEBE9;color:#4E342E;border-color:#4E342E" onclick="tog(this)"><span class="dot" style="background:#4E342E"></span>Royal Enfield</div>
-  <div class="chip" data-oem="VESPA"  style="background:#E0F2F1;color:#00695C;border-color:#00695C" onclick="tog(this)"><span class="dot" style="background:#00695C"></span>VESPA</div>
-  <span id="countBadge">Showing all 64</span>
+  <div class="chip" data-oem="HMSI"   style="background:#E3F2FD;color:#1565C0;border-color:#1565C0" onclick="tog(this)"><span class="dot" style="background:#1565C0"></span>HMSI (Honda) <span class="chip-cnt" id="cnt-HMSI"></span></div>
+  <div class="chip" data-oem="HERO"   style="background:#FFEBEE;color:#C62828;border-color:#C62828" onclick="tog(this)"><span class="dot" style="background:#C62828"></span>HERO <span class="chip-cnt" id="cnt-HERO"></span></div>
+  <div class="chip" data-oem="BAJAJ"  style="background:#FFF3E0;color:#E65100;border-color:#E65100" onclick="tog(this)"><span class="dot" style="background:#E65100"></span>BAJAJ <span class="chip-cnt" id="cnt-BAJAJ"></span></div>
+  <div class="chip" data-oem="TVS"    style="background:#E8F5E9;color:#2E7D32;border-color:#2E7D32" onclick="tog(this)"><span class="dot" style="background:#2E7D32"></span>TVS <span class="chip-cnt" id="cnt-TVS"></span></div>
+  <div class="chip" data-oem="SUZUKI" style="background:#F3E5F5;color:#6A1B9A;border-color:#6A1B9A" onclick="tog(this)"><span class="dot" style="background:#6A1B9A"></span>SUZUKI <span class="chip-cnt" id="cnt-SUZUKI"></span></div>
+  <div class="chip" data-oem="RE"     style="background:#EFEBE9;color:#4E342E;border-color:#4E342E" onclick="tog(this)"><span class="dot" style="background:#4E342E"></span>Royal Enfield <span class="chip-cnt" id="cnt-RE"></span></div>
+  <div class="chip" data-oem="VESPA"  style="background:#E0F2F1;color:#00695C;border-color:#00695C" onclick="tog(this)"><span class="dot" style="background:#00695C"></span>VESPA <span class="chip-cnt" id="cnt-VESPA"></span></div>
+  <span id="countBadge">Showing 33</span>
+</div>
+
+<div id="legendBar">
+  <strong style="font-size:11px;color:#333;">Legend:</strong>
+  <div class="leg-item"><div class="leg-circle" style="background:#555"></div> Main Dealer (Circle)</div>
+  <div class="leg-item"><div class="leg-diamond" style="background:#555"></div> Auth Counter / Outlet (Diamond)</div>
+  <div class="leg-item"><svg width="14" height="14" viewBox="0 0 22 22" style="flex-shrink:0"><circle cx="11" cy="11" r="9" fill="#888" fill-opacity="0.5" stroke="#555" stroke-width="2"/><line x1="6" y1="6" x2="16" y2="16" stroke="#555" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="6" x2="6" y2="16" stroke="#555" stroke-width="2.5" stroke-linecap="round"/></svg> Closed</div>
 </div>
 
 <div id="gmap"></div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
-const DEALERS = [
-  // MAIN DEALERS (33)
-  {"name":"Aditya Auto Agencies","dealer":"Aditya Auto Agencies-Closed","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Dhantoli","type":"Main Dealer","lat":21.1385,"lng":79.091,"color":"#C62828","cash":35,"finance":30,"total":65},
-  {"name":"Sudarshan Motors","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Civil Line","type":"Main Dealer","lat":21.153,"lng":79.0789,"color":"#1565C0","cash":110,"finance":115,"total":225},
-  {"name":"Patni Automobiles","dealer":"Patni Automobiles","oem":"BAJAJ","oemFull":"Bajaj Auto","locality":"Sadar","type":"Main Dealer","lat":21.1585,"lng":79.0827,"color":"#E65100","cash":35,"finance":45,"total":80},
-  {"name":"Mascot Motors","dealer":"Mascot Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"CA Road","type":"Main Dealer","lat":21.1483,"lng":79.1235,"color":"#1565C0","cash":230,"finance":220,"total":450},
-  {"name":"Tajshree Autowheels Pvt. Ltd.","dealer":"Tajshree Autowheels Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Deo Nagar","type":"Main Dealer","lat":21.133,"lng":79.08,"color":"#1565C0","cash":130,"finance":110,"total":240},
-  {"name":"Paragon Traders","dealer":"Paragon Traders","oem":"RE","oemFull":"Royal Enfield","locality":"Burdi","type":"Main Dealer","lat":21.135,"lng":79.096,"color":"#4E342E","cash":40,"finance":30,"total":70},
-  {"name":"Thaparsons Motors","dealer":"Thaparsons Motors","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Butibori","type":"Main Dealer","lat":20.9415,"lng":79.0075,"color":"#C62828","cash":20,"finance":25,"total":45},
-  {"name":"Rishikesh Motors Private Limited","dealer":"Rishikesh Motors Private Limited-Closed","oem":"SUZUKI","oemFull":"Suzuki Motorcycle","locality":"Civil Line","type":"Main Dealer","lat":21.153,"lng":79.0789,"color":"#6A1B9A","cash":0,"finance":0,"total":0},
-  {"name":"N. K. Kusumgar And Co.","dealer":"N. K. Kusumgar And Co.","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Bus Stand","type":"Main Dealer","lat":21.1349,"lng":79.0968,"color":"#C62828","cash":60,"finance":50,"total":110},
-  {"name":"Arun Automobiles","dealer":"Arun Automobiles","oem":"BAJAJ","oemFull":"Bajaj Auto","locality":"Khamla","type":"Main Dealer","lat":21.1121,"lng":79.064,"color":"#E65100","cash":75,"finance":60,"total":135},
-  {"name":"Jaimal Automobiles Pvt Ltd","dealer":"Jaimal Automobiles Pvt Ltd","oem":"SUZUKI","oemFull":"Suzuki Motorcycle","locality":"CA Road","type":"Main Dealer","lat":21.1483,"lng":79.1238,"color":"#6A1B9A","cash":70,"finance":60,"total":130},
-  {"name":"A K Gandhi","dealer":"A. K. Gandhi","oem":"TVS","oemFull":"TVS Motor","locality":"Dhantoli","type":"Main Dealer","lat":21.1388,"lng":79.0912,"color":"#2E7D32","cash":160,"finance":120,"total":280},
-  {"name":"Nangia Automobiles","dealer":"Nangia Automobiles","oem":"SUZUKI","oemFull":"Suzuki Motorcycle","locality":"Dhantoli","type":"Main Dealer","lat":21.1382,"lng":79.0908,"color":"#6A1B9A","cash":35,"finance":30,"total":65},
-  {"name":"Sai Point Automobiles Pvt. Ltd.","dealer":"Sai Point Automobiles Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Baidyanath Square","type":"Main Dealer","lat":21.1368,"lng":79.1007,"color":"#1565C0","cash":110,"finance":90,"total":200},
-  {"name":"Mercury Motors","dealer":"Mercury Motors","oem":"TVS","oemFull":"TVS Motor","locality":"CA Road","type":"Main Dealer","lat":21.1486,"lng":79.1237,"color":"#2E7D32","cash":125,"finance":95,"total":220},
-  {"name":"Indrayani Motors","dealer":"Indrayani Motors","oem":"TVS","oemFull":"TVS Motor","locality":"Suyog Nagar","type":"Main Dealer","lat":21.1069,"lng":79.0833,"color":"#2E7D32","cash":140,"finance":120,"total":260},
-  {"name":"I Ride Enterprises Pvt. Ltd.","dealer":"I Ride Enterprises Pvt Ltd","oem":"BAJAJ","oemFull":"Bajaj Auto","locality":"CA Road","type":"Main Dealer","lat":21.148,"lng":79.1233,"color":"#E65100","cash":55,"finance":45,"total":100},
-  {"name":"Raj Automotive","dealer":"Raj Automotive","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Butibori","type":"Main Dealer","lat":20.9418,"lng":79.008,"color":"#1565C0","cash":100,"finance":80,"total":180},
-  {"name":"Patni Auto Service Centre","dealer":"Patni Auto Service Centre","oem":"BAJAJ","oemFull":"Bajaj Auto","locality":"Butibori","type":"Main Dealer","lat":20.9412,"lng":79.007,"color":"#E65100","cash":40,"finance":35,"total":75},
-  {"name":"Mascot Mobility India Pvt Ltd","dealer":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Hingna","type":"Main Dealer","lat":21.1186,"lng":79.0152,"color":"#1565C0","cash":100,"finance":80,"total":180},
-  {"name":"Ved Motors","dealer":"Ved Motors","oem":"RE","oemFull":"Royal Enfield","locality":"Amravati Road","type":"Main Dealer","lat":21.1733,"lng":79.1011,"color":"#4E342E","cash":35,"finance":45,"total":80},
-  {"name":"Shri Krishna Automobiles","dealer":"Shri Krishna Automobiles","oem":"RE","oemFull":"Royal Enfield","locality":"CA Road","type":"Main Dealer","lat":21.1477,"lng":79.124,"color":"#4E342E","cash":45,"finance":65,"total":110},
-  {"name":"Gurudev Motor","dealer":"Gurudev Motor","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Pratap Nagar","type":"Main Dealer","lat":21.118,"lng":79.068,"color":"#C62828","cash":40,"finance":30,"total":70},
-  {"name":"Unnati Wheels","dealer":"Unnati Wheels","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Teka Naka","type":"Main Dealer","lat":21.138,"lng":79.07,"color":"#C62828","cash":70,"finance":60,"total":150},
-  {"name":"Khushbu Motors","dealer":"Khushbu Motors","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Kamptee","type":"Main Dealer","lat":21.2109,"lng":79.1875,"color":"#C62828","cash":70,"finance":50,"total":120},
-  {"name":"Sai Dynamic Motors","dealer":"Sai Dynamic TVS","oem":"TVS","oemFull":"TVS Motor","locality":"Deo Nagar","type":"Main Dealer","lat":21.1327,"lng":79.0797,"color":"#2E7D32","cash":90,"finance":70,"total":160},
-  {"name":"Ironik Motors Pvt. Ltd.","dealer":"Ironik Motors Pvt. Ltd.","oem":"SUZUKI","oemFull":"Suzuki Motorcycle","locality":"Trimurti Nagar","type":"Main Dealer","lat":21.1113,"lng":79.0673,"color":"#6A1B9A","cash":55,"finance":40,"total":95},
-  {"name":"Devkule Motors","dealer":"Devkule Motors","oem":"VESPA","oemFull":"Vespa / Aprilia","locality":"Ghat Road","type":"Main Dealer","lat":21.1383,"lng":79.0895,"color":"#00695C","cash":15,"finance":10,"total":25},
-  {"name":"Motonext Pvt Ltd","dealer":"Motonext Pvt. Ltd.","oem":"SUZUKI","oemFull":"Suzuki Motorcycle","locality":"Automotive Square","type":"Main Dealer","lat":21.1856,"lng":79.114,"color":"#6A1B9A","cash":45,"finance":55,"total":110},
-  {"name":"Manidhari TVS","dealer":"Manidhari TVS","oem":"TVS","oemFull":"TVS Motor","locality":"Teka Naka","type":"Main Dealer","lat":21.1383,"lng":79.0702,"color":"#2E7D32","cash":30,"finance":45,"total":75},
-  {"name":"Manyata TVS","dealer":"Manyata TVS","oem":"TVS","oemFull":"TVS Motor","locality":"Civil Line","type":"Main Dealer","lat":21.1533,"lng":79.0792,"color":"#2E7D32","cash":25,"finance":20,"total":45},
-  {"name":"Ayansh TVS","dealer":"Ayansh TVS","oem":"TVS","oemFull":"TVS Motor","locality":"Butibori","type":"Main Dealer","lat":20.9408,"lng":79.0065,"color":"#2E7D32","cash":25,"finance":35,"total":60},
-  {"name":"Zen TVS","dealer":"Zen TVS","oem":"TVS","oemFull":"TVS Motor","locality":"Dharampeth","type":"Main Dealer","lat":21.1447,"lng":79.0677,"color":"#2E7D32","cash":35,"finance":35,"total":70},
-
-  // AUTH COUNTERS — Sub Dealers & Branches (31)
-  {"name":"Dhenkar Auto","dealer":"Unnati Wheels","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Katol","type":"Sub Dealer","lat":21.274,"lng":78.587,"color":"#C62828","cash":15,"finance":20,"total":35},
-  {"name":"Shri Motors","dealer":"Aditya Auto Agencies","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Umred","type":"Sub Dealer","lat":20.851,"lng":79.324,"color":"#C62828","cash":18,"finance":20,"total":38},
-  {"name":"Maha Kali Motors","dealer":"Aditya Auto Agencies","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Hingna","type":"Sub Dealer","lat":21.1186,"lng":79.016,"color":"#C62828","cash":30,"finance":35,"total":65},
-  {"name":"Sonu Automobile","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Khaparkheda","type":"Sub Dealer","lat":21.23,"lng":79.09,"color":"#1565C0","cash":20,"finance":17,"total":37},
-  {"name":"Om Traders","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Kanhan","type":"Sub Dealer","lat":21.242,"lng":79.16,"color":"#1565C0","cash":18,"finance":20,"total":38},
-  {"name":"Prashant Motors","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Nagardhan","type":"Sub Dealer","lat":21.2,"lng":79.14,"color":"#1565C0","cash":10,"finance":15,"total":25},
-  {"name":"Automack","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Koradi","type":"Sub Dealer","lat":21.22,"lng":79.055,"color":"#1565C0","cash":25,"finance":30,"total":55},
-  {"name":"Shankar Auto","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Jaripatka","type":"Sub Dealer","lat":21.152,"lng":79.135,"color":"#1565C0","cash":20,"finance":25,"total":45},
-  {"name":"Super Honda","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Ramtek","type":"Sub Dealer","lat":21.39,"lng":79.32,"color":"#1565C0","cash":22,"finance":25,"total":47},
-  {"name":"Vaheguru","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Godhani","type":"Sub Dealer","lat":21.12,"lng":79.18,"color":"#1565C0","cash":15,"finance":15,"total":30},
-  {"name":"Jora Auto","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Zafar Nagar","type":"Sub Dealer","lat":21.128,"lng":79.08,"color":"#1565C0","cash":15,"finance":20,"total":35},
-  {"name":"Sudarshan Motors (Branch)","dealer":"Sudarshan Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Ravi Nagar","type":"Branch","lat":21.16,"lng":79.085,"color":"#1565C0","cash":25,"finance":20,"total":45},
-  {"name":"Tanu Shri Motors","dealer":"Patni Automobiles","oem":"BAJAJ","oemFull":"Bajaj Auto","locality":"Godhani","type":"Sub Dealer","lat":21.122,"lng":79.182,"color":"#E65100","cash":10,"finance":15,"total":25},
-  {"name":"Shri Sai Motors","dealer":"Patni Automobiles","oem":"BAJAJ","oemFull":"Bajaj Auto","locality":"Mankapur","type":"Sub Dealer","lat":21.16,"lng":79.15,"color":"#E65100","cash":12,"finance":10,"total":22},
-  {"name":"Patni Auto Mobiles (Branch)","dealer":"Patni Automobiles","oem":"BAJAJ","oemFull":"Bajaj Auto","locality":"Butibori","type":"Branch","lat":20.942,"lng":79.009,"color":"#E65100","cash":25,"finance":20,"total":45},
-  {"name":"Mohammadi Motors","dealer":"Mascot Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Umred","type":"Sub Dealer","lat":20.853,"lng":79.326,"color":"#1565C0","cash":25,"finance":20,"total":45},
-  {"name":"Deshmukh Automobiles","dealer":"Mascot Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Katol","type":"Sub Dealer","lat":21.276,"lng":78.589,"color":"#1565C0","cash":20,"finance":25,"total":45},
-  {"name":"Mascot Motors (Branch)","dealer":"Mascot Motors","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Lakhad Ganj","type":"Branch","lat":21.1513,"lng":79.1242,"color":"#1565C0","cash":10,"finance":15,"total":25},
-  {"name":"Speed Honda","dealer":"Tajshree Autowheels Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Kalmeshwar","type":"Sub Dealer","lat":21.22,"lng":78.99,"color":"#1565C0","cash":35,"finance":30,"total":65},
-  {"name":"Tajshree Autowheels (Branch)","dealer":"Tajshree Autowheels Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Manish Nagar","type":"Branch","lat":21.0909,"lng":79.0821,"color":"#1565C0","cash":45,"finance":30,"total":75},
-  {"name":"N.K.Kusumgar (Branch)","dealer":"N. K. Kusumgar And Co.","oem":"HERO","oemFull":"Hero MotoCorp","locality":"Saoner","type":"Branch","lat":21.38,"lng":78.92,"color":"#C62828","cash":25,"finance":20,"total":45},
-  {"name":"A K Gandhi (Branch)","dealer":"A. K. Gandhi","oem":"TVS","oemFull":"TVS Motor","locality":"Baidyanath Chowk, Nagpur","type":"Branch","lat":21.1368,"lng":79.1007,"color":"#2E7D32","cash":55,"finance":40,"total":95},
-  {"name":"Sai Point Automobiles (Branch)","dealer":"Sai Point Automobiles Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Manewada","type":"Branch","lat":21.12,"lng":79.11,"color":"#1565C0","cash":35,"finance":30,"total":65},
-  {"name":"Sai Point Asc","dealer":"Sai Point Automobiles Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Mouda","type":"Branch","lat":21.26,"lng":79.29,"color":"#1565C0","cash":20,"finance":15,"total":35},
-  {"name":"Bhavna Motors","dealer":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Hingna","type":"Sub Dealer","lat":21.1192,"lng":79.0158,"color":"#1565C0","cash":25,"finance":20,"total":45},
-  {"name":"Gurudev Motor (Branch)","dealer":"Gurudev Motor","oem":"HERO","oemFull":"Hero MotoCorp","locality":"HB Town","type":"Branch","lat":21.125,"lng":79.073,"color":"#C62828","cash":15,"finance":20,"total":35},
-  {"name":"Indrayani Motors (Branch)","dealer":"Indrayani Motors","oem":"TVS","oemFull":"TVS Motor","locality":"Krida Square","type":"Branch","lat":21.147,"lng":79.089,"color":"#2E7D32","cash":20,"finance":15,"total":35},
-  {"name":"Parvati Motors (Hingna)","dealer":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Hingna","type":"Sub Dealer","lat":21.1195,"lng":79.0145,"color":"#1565C0","cash":30,"finance":30,"total":55},
-  {"name":"Parvati Motors (Wadi)","dealer":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","oemFull":"Honda (HMSI)","locality":"Wadi","type":"Sub Dealer","lat":21.115,"lng":79.185,"color":"#1565C0","cash":25,"finance":20,"total":50},
-  {"name":"Manyata TVS (Branch)","dealer":"Manyata TVS","oem":"TVS","oemFull":"TVS Motor","locality":"Sadar","type":"Branch","lat":21.159,"lng":79.0832,"color":"#2E7D32","cash":10,"finance":15,"total":25},
-  {"name":"Zen TVS (Branch)","dealer":"Zen TVS","oem":"TVS","oemFull":"TVS Motor","locality":"Hingna","type":"Branch","lat":21.1182,"lng":79.0148,"color":"#2E7D32","cash":45,"finance":40,"total":85}
-];
-
-// ── CONFIG ────────────────────────────────────────────────────────────────
+const OEM_COLORS = {
+  HMSI:"#1565C0", HERO:"#C62828", BAJAJ:"#E65100",
+  TVS:"#2E7D32", SUZUKI:"#6A1B9A", RE:"#4E342E", VESPA:"#00695C"
+};
+const OEM_FULL = {
+  HMSI:"Honda (HMSI)", HERO:"Hero MotoCorp", BAJAJ:"Bajaj Auto",
+  TVS:"TVS Motor", SUZUKI:"Suzuki Motorcycle", RE:"Royal Enfield", VESPA:"Vespa / Aprilia"
+};
 const OEM_LOGOS = {
-  'HMSI': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgNjAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIGZpbGw9IiNDQzAwMDAiIHJ4PSI2Ii8+PHRleHQgeD0iNjAiIHk9IjQ0IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI0MiIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkg8L3RleHQ+PHRleHQgeD0iNjAiIHk9IjU2IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI5IiBmaWxsPSIjZmZjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiI+SE9OREE8L3RleHQ+PC9zdmc+',
-  'HERO': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgNjAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIGZpbGw9IiNDQzAwMDAiIHJ4PSI2Ii8+PHRleHQgeD0iNjAiIHk9IjQwIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyOCIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIxIj5IRVJPPC90ZXh0Pjx0ZXh0IHg9IjYwIiB5PSI1NCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgZmlsbD0iI2ZmY2NjYyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjEiPk1PVE9DT1JQPC90ZXh0Pjwvc3ZnPg==',
-  'BAJAJ': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgNjAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIGZpbGw9IiMwMDMwODciIHJ4PSI2Ii8+PHBvbHlnb24gcG9pbnRzPSI2MCw4IDEwMCw1MiAyMCw1MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNEZDM0Y3IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI2MCIgeT0iNDgiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjayxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjEiPkJBSkFKPC90ZXh0Pjwvc3ZnPg==',
-  'TVS': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgNjAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIGZpbGw9IiNDQzAwMDAiIHJ4PSI2Ii8+PHRleHQgeD0iNjAiIHk9IjQ0IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzOCIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIzIj5UVlM8L3RleHQ+PHRleHQgeD0iNjAiIHk9IjU2IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmaWxsPSIjZmZjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMSI+TU9UT1IgQ08uPC90ZXh0Pjwvc3ZnPg==',
-  'SUZUKI': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgNjAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIGZpbGw9IiMwMDMwODciIHJ4PSI2Ii8+PHRleHQgeD0iNjAiIHk9IjM4IiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSI0NCIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlM8L3RleHQ+PHRleHQgeD0iNjAiIHk9IjU0IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI5IiBmaWxsPSIjOTBDQUY5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMSI+U1VaVUtJPC90ZXh0Pjwvc3ZnPg==',
-  'RE': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgNjAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIGZpbGw9IiMyQzE4MTAiIHJ4PSI2Ii8+PHRleHQgeD0iNjAiIHk9IjM2IiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNENEE4NDMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlJPWUFMPC90ZXh0Pjx0ZXh0IHg9IjYwIiB5PSI1NCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRDRBODQzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMSI+RU5GSUVMRDwvdGV4dD48L3N2Zz4=',
-  'VESPA': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgNjAiPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNjAiIGZpbGw9IiMwMDY5NUMiIHJ4PSI2Ii8+PHRleHQgeD0iNjAiIHk9IjQyIiBmb250LWZhbWlseT0iR2VvcmdpYSxUaW1lcyBOZXcgUm9tYW4sc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMSI+VmVzcGE8L3RleHQ+PHRleHQgeD0iNjAiIHk9IjU1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmaWxsPSIjODBDQkM0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiI+UElBR0dJTzwvdGV4dD48L3N2Zz4=',
+  HMSI:`<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#E3F2FD"/><text x="18" y="23" text-anchor="middle" font-size="10" font-weight="bold" fill="#1565C0">HONDA</text></svg>`,
+  HERO:`<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#FFEBEE"/><text x="18" y="23" text-anchor="middle" font-size="11" font-weight="bold" fill="#C62828">HERO</text></svg>`,
+  BAJAJ:`<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#FFF3E0"/><text x="18" y="23" text-anchor="middle" font-size="10" font-weight="bold" fill="#E65100">BAJAJ</text></svg>`,
+  TVS:`<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#E8F5E9"/><text x="18" y="23" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E7D32">TVS</text></svg>`,
+  SUZUKI:`<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#F3E5F5"/><text x="18" y="23" text-anchor="middle" font-size="9" font-weight="bold" fill="#6A1B9A">SUZUKI</text></svg>`,
+  RE:`<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#EFEBE9"/><text x="18" y="21" text-anchor="middle" font-size="7" font-weight="bold" fill="#4E342E">ROYAL</text><text x="18" y="29" text-anchor="middle" font-size="7" font-weight="bold" fill="#4E342E">ENFIELD</text></svg>`,
+  VESPA:`<svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#E0F2F1"/><text x="18" y="23" text-anchor="middle" font-size="9" font-weight="bold" fill="#00695C">VESPA</text></svg>`,
 };
 
-const OEM_LABEL = {HMSI:'H',HERO:'Hr',BAJAJ:'B',TVS:'T',SUZUKI:'S',RE:'R',VESPA:'V'};
-const TYPE_COLORS = {'Main Dealer':'#FFFFFF','Sub Dealer':'#FFD54F','Branch':'#80DEEA'};
+// ── MAIN DEALERS (33) ──────────────────────────────────────────────────────
+const MAIN_DEALERS = [
+  {"name":"Patni Automobiles","oem":"BAJAJ","locality":"Sadar","pincode":"440001","lat":21.1588,"lng":79.0827,"closed":false},
+  {"name":"Arun Automobiles","oem":"BAJAJ","locality":"Khamla","pincode":"440025","lat":21.1121,"lng":79.0640,"closed":false},
+  {"name":"I Ride Enterprises Pvt Ltd","oem":"BAJAJ","locality":"CA Road","pincode":"440008","lat":21.1480,"lng":79.1233,"closed":false},
+  {"name":"Patni Auto Service Centre","oem":"BAJAJ","locality":"Butibori","pincode":"441108","lat":20.9412,"lng":79.0070,"closed":false},
+  {"name":"Aditya Auto Agencies","oem":"HERO","locality":"Dhantoli","pincode":"440018","lat":21.1385,"lng":79.0910,"closed":true},
+  {"name":"Thaparsons Motors","oem":"HERO","locality":"Butibori","pincode":"441108","lat":20.9415,"lng":79.0075,"closed":false},
+  {"name":"NK Kusumgar & Co.","oem":"HERO","locality":"Rambagh","pincode":"440018","lat":21.1349,"lng":79.0968,"closed":false},
+  {"name":"Gurudev Motor","oem":"HERO","locality":"Pratap Nagar","pincode":"440022","lat":21.1180,"lng":79.0680,"closed":false},
+  {"name":"Unnati Wheels","oem":"HERO","locality":"Nari Layout","pincode":"440026","lat":21.1380,"lng":79.0700,"closed":false},
+  {"name":"Khushbu Motors","oem":"HERO","locality":"Kalamna Road","pincode":"441001","lat":21.2109,"lng":79.1875,"closed":false},
+  {"name":"Sudarshan Motors","oem":"HMSI","locality":"Civil Lines","pincode":"440001","lat":21.1530,"lng":79.0789,"closed":false},
+  {"name":"Mascot Motors","oem":"HMSI","locality":"CA Road","pincode":"440008","lat":21.1483,"lng":79.1235,"closed":false},
+  {"name":"Tajshree Autowheels Pvt. Ltd.","oem":"HMSI","locality":"Deo Nagar","pincode":"440015","lat":21.1330,"lng":79.0800,"closed":false},
+  {"name":"Sai Point Automobiles Pvt. Ltd.","oem":"HMSI","locality":"Baidyanath Square","pincode":"440024","lat":21.1368,"lng":79.1007,"closed":false},
+  {"name":"Raj Automotive","oem":"HMSI","locality":"Butibori","pincode":"441108","lat":20.9418,"lng":79.0080,"closed":false},
+  {"name":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","locality":"Hingna","pincode":"440016","lat":21.1186,"lng":79.0152,"closed":false},
+  {"name":"Paragon Traders","oem":"RE","locality":"Burdi","pincode":"440012","lat":21.1350,"lng":79.0960,"closed":false},
+  {"name":"Ved Motors","oem":"RE","locality":"Kamptee Road","pincode":"440017","lat":21.1733,"lng":79.1011,"closed":false},
+  {"name":"Shri Krishna Automobiles","oem":"RE","locality":"CA Road","pincode":"440008","lat":21.1477,"lng":79.1240,"closed":false},
+  {"name":"Rishikesh Motors Private Limited","oem":"SUZUKI","locality":"Civil Lines","pincode":"440001","lat":21.1533,"lng":79.0792,"closed":true},
+  {"name":"Jaimal Automobiles Pvt Ltd","oem":"SUZUKI","locality":"CA Road","pincode":"440008","lat":21.1483,"lng":79.1238,"closed":false},
+  {"name":"Nangia Automobiles","oem":"SUZUKI","locality":"Dhantoli","pincode":"440012","lat":21.1382,"lng":79.0908,"closed":false},
+  {"name":"Ironik Motors Pvt. Ltd.","oem":"SUZUKI","locality":"Chatrapati Nagar","pincode":"440015","lat":21.1113,"lng":79.0673,"closed":false},
+  {"name":"Motonext Pvt. Ltd.","oem":"SUZUKI","locality":"Automotive Square","pincode":"440026","lat":21.1856,"lng":79.1140,"closed":false},
+  {"name":"A. K. Gandhi","oem":"TVS","locality":"Dhantoli","pincode":"440012","lat":21.1388,"lng":79.0912,"closed":false},
+  {"name":"Mercury Motors","oem":"TVS","locality":"CA Road","pincode":"440008","lat":21.1486,"lng":79.1237,"closed":false},
+  {"name":"Indrayani Motors","oem":"TVS","locality":"Suyog Nagar","pincode":"440009","lat":21.1069,"lng":79.0833,"closed":false},
+  {"name":"Sai Dynamic TVS","oem":"TVS","locality":"Deo Nagar","pincode":"440015","lat":21.1327,"lng":79.0797,"closed":false},
+  {"name":"Manidhari TVS","oem":"TVS","locality":"Teka Naka","pincode":"440026","lat":21.1383,"lng":79.0702,"closed":false},
+  {"name":"Manyata TVS","oem":"TVS","locality":"Civil Lines","pincode":"440001","lat":21.1535,"lng":79.0794,"closed":false},
+  {"name":"Ayansh TVS","oem":"TVS","locality":"Butibori","pincode":"441108","lat":20.9408,"lng":79.0065,"closed":false},
+  {"name":"Zen TVS","oem":"TVS","locality":"Dharampeth","pincode":"440010","lat":21.1447,"lng":79.0677,"closed":false},
+  {"name":"Devkule Motors","oem":"VESPA","locality":"Sitaburdi","pincode":"440018","lat":21.1383,"lng":79.0895,"closed":false},
+];
 
-// Diamond SVG path (rotated square) for auth counters
-const DIAMOND_PATH = 'M 0,-12 L 9,0 L 0,12 L -9,0 Z';
+// ── AUTH COUNTERS / ADDITIONAL OUTLETS (31) ────────────────────────────────
+const AUTH_COUNTERS = [
+  {"counter_name":"A K Gandhi","parent_dealer":"A. K. Gandhi","oem":"TVS","locality":"Baidyanath Chowk","lat":21.1370,"lng":79.1008},
+  {"counter_name":"Patni Auto Mobiles","parent_dealer":"Patni Automobiles","oem":"BAJAJ","locality":"Butibori","lat":20.9415,"lng":79.0068},
+  {"counter_name":"Vaheguru","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Godhani","lat":21.0850,"lng":79.1420},
+  {"counter_name":"Tanu Shri Motors","parent_dealer":"Patni Automobiles","oem":"BAJAJ","locality":"Godhani","lat":21.0855,"lng":79.1425},
+  {"counter_name":"Gurudev Motor","parent_dealer":"Gurudev Motor","oem":"HERO","locality":"HB Town","lat":21.1050,"lng":79.0500},
+  {"counter_name":"Maha Kali Motors","parent_dealer":"Aditya Auto Agencies","oem":"HERO","locality":"Hingna","lat":21.1190,"lng":79.0145},
+  {"counter_name":"Zen TVS","parent_dealer":"Zen TVS","oem":"TVS","locality":"Hingna","lat":21.1195,"lng":79.0155},
+  {"counter_name":"Bhavna Motors","parent_dealer":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","locality":"Hingna","lat":21.1188,"lng":79.0148},
+  {"counter_name":"Parvati Motors","parent_dealer":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","locality":"Hingna","lat":21.1183,"lng":79.0160},
+  {"counter_name":"Shankar Auto","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Jaripatka","lat":21.1789,"lng":79.0885},
+  {"counter_name":"Speed Honda","parent_dealer":"Tajshree Autowheels Pvt. Ltd.","oem":"HMSI","locality":"Kalmeshwar","lat":21.2250,"lng":78.9420},
+  {"counter_name":"Om Traders","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Kanhan","lat":21.2630,"lng":79.2010},
+  {"counter_name":"Dhenkar Auto","parent_dealer":"Unnati Wheels","oem":"HERO","locality":"Katol","lat":21.2760,"lng":78.5870},
+  {"counter_name":"Deshmukh Automobiles","parent_dealer":"Mascot Motors","oem":"HMSI","locality":"Katol","lat":21.2755,"lng":78.5875},
+  {"counter_name":"Sonu Automobile","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Khaparkheda","lat":21.2350,"lng":79.0700},
+  {"counter_name":"Automack","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Koradi","lat":21.2040,"lng":79.0660},
+  {"counter_name":"Indrayani Motors","parent_dealer":"Indrayani Motors","oem":"TVS","locality":"Krida Square","lat":21.1450,"lng":79.0830},
+  {"counter_name":"Mascot Motors","parent_dealer":"Mascot Motors","oem":"HMSI","locality":"Lakhad Ganj","lat":21.1520,"lng":79.1080},
+  {"counter_name":"Sai Point Automobiles Pvt. Ltd.","parent_dealer":"Sai Point Automobiles Pvt. Ltd.","oem":"HMSI","locality":"Manewada","lat":21.1070,"lng":79.1070},
+  {"counter_name":"Tajshree Autowheels Pvt Ltd","parent_dealer":"Tajshree Autowheels Pvt. Ltd.","oem":"HMSI","locality":"Manish Nagar","lat":21.0960,"lng":79.0590},
+  {"counter_name":"Shri Sai Motors","parent_dealer":"Patni Automobiles","oem":"BAJAJ","locality":"Mankapur","lat":21.1560,"lng":79.0420},
+  {"counter_name":"Sai Point Asc","parent_dealer":"Sai Point Automobiles Pvt. Ltd.","oem":"HMSI","locality":"Mouda","lat":21.2610,"lng":79.2890},
+  {"counter_name":"Prashant Motors","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Nagardhan","lat":21.2430,"lng":79.2210},
+  {"counter_name":"Super Honda","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Ramtek","lat":21.3950,"lng":79.3290},
+  {"counter_name":"Sudarshan Motors","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Ravi Nagar","lat":21.1610,"lng":79.0900},
+  {"counter_name":"Manyata TVS","parent_dealer":"Manyata TVS","oem":"TVS","locality":"Sadar","lat":21.1590,"lng":79.0830},
+  {"counter_name":"N.K.Kusumgar","parent_dealer":"N. K. Kusumgar And Co.","oem":"HERO","locality":"Saoner","lat":21.3790,"lng":78.9190},
+  {"counter_name":"Shri Motors","parent_dealer":"Aditya Auto Agencies","oem":"HERO","locality":"Umred","lat":20.8540,"lng":79.3180},
+  {"counter_name":"Mohammadi Motors","parent_dealer":"Mascot Motors","oem":"HMSI","locality":"Umred","lat":20.8545,"lng":79.3185},
+  {"counter_name":"Parvati Motors","parent_dealer":"Mascot Mobility India Pvt. Ltd.","oem":"HMSI","locality":"Wadi","lat":21.1250,"lng":79.1560},
+  {"counter_name":"Jora Auto","parent_dealer":"Sudarshan Motors","oem":"HMSI","locality":"Zafar Nagar","lat":21.1390,"lng":79.0600},
+];
 
-let map, infoWin;
-let markerArr = [];   // [{marker, oem, isMain}]
-let activeOem = new Set(DEALERS.map(d=>d.oem));
-let viewMode  = 'all'; // 'main' | 'all'
+// Diamond path for auth counter markers
+function diamondPath(){
+  return 'M 0,-12 L 9,0 L 0,12 L -9,0 Z';
+}
+
+let map, infoWindow;
+let mainMarkers=[], authMarkers=[];
+let activeOEMs = new Set(Object.keys(OEM_COLORS));
+let showAuth = false;
 
 function initMap(){
   map = new google.maps.Map(document.getElementById('gmap'),{
-    center:{lat:21.145,lng:79.09}, zoom:12,
-    mapTypeControl:false, streetViewControl:false, fullscreenControl:true,
-    styles:[
-      {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
-      {featureType:'transit',stylers:[{visibility:'off'}]}
-    ]
+    center:{lat:21.1458,lng:79.0882}, zoom:11,
+    mapTypeControl:false, streetViewControl:false,
+    styles:[{featureType:"poi",elementType:"labels",stylers:[{visibility:"off"}]}]
   });
-  infoWin = new google.maps.InfoWindow();
+  infoWindow = new google.maps.InfoWindow();
 
-  // Update chip counts (based on all 64)
-  const cnt = {};
-  DEALERS.forEach(d=>{ cnt[d.oem]=(cnt[d.oem]||0)+1; });
-  document.querySelectorAll('.chip').forEach(c=>{
-    const oem=c.dataset.oem;
-    c.innerHTML = c.innerHTML + ` · ${cnt[oem]||0}`;
-  });
+  // Build a circle-with-X SVG icon for closed dealers
+  function closedIcon(color){
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="${color}" fill-opacity="0.55" stroke="#fff" stroke-width="2"/><line x1="6" y1="6" x2="16" y2="16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="16" y1="6" x2="6" y2="16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+    return { url:'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg), scaledSize:new google.maps.Size(22,22), anchor:new google.maps.Point(11,11) };
+  }
 
-  DEALERS.forEach(d=>{
-    const isMain = d.type === 'Main Dealer';
-    const marker = new google.maps.Marker({
-      position:{lat:d.lat, lng:d.lng},
+  // Create main dealer markers (circles; closed = circle+X overlay)
+  MAIN_DEALERS.forEach(d=>{
+    const color = OEM_COLORS[d.oem];
+    const m = new google.maps.Marker({
+      position:{lat:d.lat,lng:d.lng},
       map,
-      title: d.name,
-      zIndex: isMain ? 10 : 5,
-      icon: isMain ? {
-        // Circle for Main Dealers
+      title:d.name,
+      icon: d.closed ? closedIcon(color) : {
         path: google.maps.SymbolPath.CIRCLE,
-        scale: 11,
-        fillColor: d.color, fillOpacity: 1,
-        strokeColor: '#ffffff', strokeWeight: 2.5
-      } : {
-        // Diamond for Sub Dealer / Branch
-        path: DIAMOND_PATH,
-        scale: 0.85,
-        fillColor: d.color, fillOpacity: 0.88,
-        strokeColor: '#ffffff', strokeWeight: 2,
-        rotation: 0
-      },
-      label:{
-        text: OEM_LABEL[d.oem]||d.oem.charAt(0),
-        color:'#fff', fontSize:'8px', fontWeight:'bold'
+        scale: 9,
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: '#fff',
+        strokeWeight: 2
       }
     });
+    m._oem = d.oem;
+    m._data = d;
+    m._isMain = true;
+    m.addListener('click',()=>showMainInfo(m,d));
+    mainMarkers.push(m);
+  });
 
-    marker.addListener('click',()=>{
-      const closed = d.dealer.toLowerCase().includes('closed')
-        ? '<span style="background:#FF5722;color:#fff;font-size:10px;padding:1px 7px;border-radius:10px;margin-left:6px;">CLOSED</span>' : '';
-      const typeBg = d.type==='Main Dealer' ? '#1565C0' : d.type==='Branch' ? '#00838F' : '#F57F17';
-      infoWin.setContent(`
-        <div class="iw-wrap">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <img src="${OEM_LOGOS[d.oem]}" style="width:72px;height:36px;border-radius:5px;object-fit:cover;flex-shrink:0;" alt="${d.oem}"/>
-            <div>
-              <div class="iw-name">${d.name}${closed}</div>
-              <div>
-                <span class="iw-badge" style="background:${d.color}">${d.oem} — ${d.oemFull}</span>
-                <span class="iw-type" style="background:${typeBg};color:#fff">${d.type}</span>
-              </div>
-            </div>
-          </div>
-          <div class="iw-row"><span>📍</span> ${d.locality}, Nagpur</div>
-          ${!isMain ? `<div class="iw-parent">Under: ${d.dealer}</div>` : ''}
-          <div class="iw-sales">
-            <div><div class="sv">${d.cash}</div><div class="sk">Cash</div></div>
-            <div><div class="sv">${d.finance}</div><div class="sk">Finance</div></div>
-            <div><div class="sv" style="color:#1565C0">${d.total}</div><div class="sk">Total</div></div>
-          </div>
-        </div>`);
-      infoWin.open(map, marker);
+  // Create auth counter markers (diamonds) — hidden initially
+  AUTH_COUNTERS.forEach(d=>{
+    const color = OEM_COLORS[d.oem];
+    const m = new google.maps.Marker({
+      position:{lat:d.lat,lng:d.lng},
+      map:null,
+      title:d.counter_name,
+      icon:{
+        path: diamondPath(),
+        scale: 1,
+        fillColor: color,
+        fillOpacity: 0.9,
+        strokeColor: '#fff',
+        strokeWeight: 1.5
+      }
     });
-
-    markerArr.push({marker, oem:d.oem, isMain});
+    m._oem = d.oem;
+    m._data = d;
+    m._isMain = false;
+    m.addListener('click',()=>showAuthInfo(m,d));
+    authMarkers.push(m);
   });
 
-  refreshMarkers();
+  updateChipCounts();
+  updateBadge();
 }
 
-function setView(mode){
-  viewMode = mode;
-  document.getElementById('btnMain').classList.toggle('active', mode==='main');
-  document.getElementById('btnAll').classList.toggle('active',  mode==='all');
-  refreshMarkers();
+function showMainInfo(marker, d){
+  const closedTag = d.closed ? `<span class="iw-closed">CLOSED</span>` : '';
+  const html = `<div class="iw-wrap">
+    <div class="iw-logo">${OEM_LOGOS[d.oem]}<div>
+      <div class="iw-name">${d.name}${closedTag}</div>
+      <span class="iw-badge" style="background:${OEM_COLORS[d.oem]}">${OEM_FULL[d.oem]}</span>
+    </div></div>
+    <div class="iw-row"><span>Type</span> Main Dealer</div>
+    <div class="iw-row"><span>Locality</span> ${d.locality}</div>
+    <div class="iw-row"><span>Pin Code</span> ${d.pincode}</div>
+  </div>`;
+  infoWindow.setContent(html);
+  infoWindow.open(map, marker);
 }
 
-function tog(el){
-  const oem=el.dataset.oem;
-  if(activeOem.has(oem)){
-    if(activeOem.size===1) return;
-    activeOem.delete(oem); el.classList.add('off');
+function showAuthInfo(marker, d){
+  const html = `<div class="iw-wrap">
+    <div class="iw-logo">${OEM_LOGOS[d.oem]}<div>
+      <div class="iw-name">${d.counter_name}</div>
+      <span class="iw-badge" style="background:${OEM_COLORS[d.oem]}">${OEM_FULL[d.oem]}</span>
+    </div></div>
+    <div class="iw-row"><span>Type</span> Auth Counter <span style="background:#EEE;color:#555;padding:1px 6px;border-radius:6px;font-size:10px;margin-left:2px;">Outlet</span></div>
+    <div class="iw-row"><span>Locality</span> ${d.locality}</div>
+    <div class="iw-row"><span>Parent Dealer</span> ${d.parent_dealer}</div>
+  </div>`;
+  infoWindow.setContent(html);
+  infoWindow.open(map, marker);
+}
+
+function onToggle(el){
+  showAuth = el.checked;
+  document.getElementById('lbl-off').style.fontWeight = showAuth ? '400' : '600';
+  document.getElementById('lbl-off').style.color = showAuth ? '#888' : '#1565C0';
+  document.getElementById('lbl-on').style.fontWeight = showAuth ? '600' : '400';
+  document.getElementById('lbl-on').style.color = showAuth ? '#1565C0' : '#888';
+  applyVisibility();
+  updateChipCounts();
+  updateBadge();
+}
+
+function tog(chip){
+  const oem = chip.dataset.oem;
+  if(activeOEMs.has(oem)){
+    if(activeOEMs.size===1) return;
+    activeOEMs.delete(oem);
+    chip.classList.add('off');
   } else {
-    activeOem.add(oem); el.classList.remove('off');
+    activeOEMs.add(oem);
+    chip.classList.remove('off');
   }
-  refreshMarkers();
+  applyVisibility();
+  updateChipCounts();
+  updateBadge();
 }
 
-function refreshMarkers(){
-  let shown=0;
-  markerArr.forEach(({marker,oem,isMain})=>{
-    const vis = activeOem.has(oem) && (viewMode==='all' || isMain);
-    marker.setVisible(vis);
-    if(vis) shown++;
+function applyVisibility(){
+  mainMarkers.forEach(m=>{
+    m.setVisible(activeOEMs.has(m._oem));
   });
-  const total = viewMode==='all' ? DEALERS.length : DEALERS.filter(d=>d.type==='Main Dealer').length;
-  document.getElementById('countBadge').textContent = `Showing ${shown} of ${total}`;
+  authMarkers.forEach(m=>{
+    m.setMap(showAuth && activeOEMs.has(m._oem) ? map : null);
+  });
 }
 
-window.initMap=initMap;
+function updateChipCounts(){
+  // Context-aware: show counts based on current view
+  const counts={};
+  if(!showAuth){
+    // Main dealers only
+    MAIN_DEALERS.forEach(d=>{ counts[d.oem]=(counts[d.oem]||0)+1; });
+  } else {
+    // Main + Auth
+    MAIN_DEALERS.forEach(d=>{ counts[d.oem]=(counts[d.oem]||0)+1; });
+    AUTH_COUNTERS.forEach(d=>{ counts[d.oem]=(counts[d.oem]||0)+1; });
+  }
+  ['HMSI','HERO','BAJAJ','TVS','SUZUKI','RE','VESPA'].forEach(oem=>{
+    const el=document.getElementById('cnt-'+oem);
+    if(el) el.textContent = counts[oem] ? '('+counts[oem]+')' : '';
+  });
+  const note = document.getElementById('toggleNote');
+  if(!showAuth){
+    note.textContent = '— Showing 33 Main Dealers';
+  } else {
+    note.textContent = '— Showing 64 pins (33 Main + 31 Outlets)';
+  }
+}
+
+function updateBadge(){
+  const visMain = mainMarkers.filter(m=>m.getVisible()).length;
+  const visAuth = showAuth ? authMarkers.filter(m=>m.getMap()!==null).length : 0;
+  const total = visMain + visAuth;
+  const allTotal = showAuth ? 64 : 33;
+  document.getElementById('countBadge').textContent = total===allTotal ? 'Showing all '+total : 'Showing '+total+' of '+allTotal;
+}
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuSZ7iflI-EuKf8mxE8bu-28uCuYZ7dA4&callback=initMap"></script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuSZ7iflI-EuKf8mxE8bu-28uCuYZ7dA4&callback=initMap">
+</script>
 </body>
 </html>
